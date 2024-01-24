@@ -15,16 +15,16 @@ public class ToDoRepository
     public string StatusMessage { get; set; }
 
     // TODO: Add variable for the SQLite connection
-    private SQLiteConnection conn;
+    private SQLiteAsyncConnection conn;
 
-    private void Init()
+    private async Task Init()
     {
         // TODO: Add code to initialize the repository
         if (conn is not null)
             return;
         
-        conn = new SQLiteConnection(_dbPath);
-        conn.CreateTable<ToDo>();
+        conn = new SQLiteAsyncConnection(_dbPath);
+        await conn.CreateTableAsync<ToDo>();
     }
 
     public ToDoRepository(string dbPath)
@@ -32,21 +32,21 @@ public class ToDoRepository
         _dbPath = dbPath;
     }
 
-    public void AddNewToDo(string text)
+    public async Task AddNewToDo(string text)
     {
         ArgumentNullException.ThrowIfNull(text, nameof(text));
         int result = 0;
         try
         {
             // TODO: Call Init()
-            Init();
+            await Init();
 
             // basic validation to ensure a name was entered
             if (string.IsNullOrEmpty(text))
                 throw new Exception("Valid text required");
 
             // TODO: Insert the new person into the database
-            result = conn.Insert( new ToDo { Text = text } );
+            result = await conn.InsertAsync( new ToDo { Text = text } );
 
             StatusMessage = string.Format("{0} record(s) added (Name: {1})", result, text);
         }
@@ -57,14 +57,14 @@ public class ToDoRepository
 
     }
 
-    public List<ToDo> GetAllTodos()
+    public async Task<List<ToDo>> GetAllTodos()
     {
         // TODO: Init then retrieve a list of Person objects from the database into a list
         try
         {
-            Init(); 
+            await Init(); 
 
-            return conn.Table<ToDo>().ToList(); 
+            return await conn.Table<ToDo>().ToListAsync(); 
         }
         catch (Exception ex)
         {

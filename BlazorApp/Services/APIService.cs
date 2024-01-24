@@ -1,12 +1,15 @@
 ﻿using RazorClassLibrary.Services;
+using SQLite;
 
 namespace BlazorApp.Services;
 
 public class APIService : IService
 {
-    public Task Add(string todo)
+    public async Task Add(string todo)
     {
-        // CONNECT TO SQL DATABASE!!!! YAY
+        //var conn = new SQLiteAsyncConnection(dbpath);
+        
+        // TODO CONNECT TO SQL DATABASE!!!! YAY
         throw new NotImplementedException();
 
     }

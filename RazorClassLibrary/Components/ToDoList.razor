@@ -1,25 +1,7 @@
 ﻿<h3>Todo List</h3>
 
-<input @bind="newTask" />
-<button @onclick="AddTask">Add</button>
 
-<ul>
-    @foreach (var task in tasks)
-    {
-        <li>@task</li>
-    }
-</ul>
 
 @code {
-    private string newTask;
-    private List<string> tasks = new List<string>();
 
-    private void AddTask()
-    {
-        if (!string.IsNullOrWhiteSpace(newTask))
-        {
-            tasks.Add(newTask);
-            newTask = string.Empty;
-        }
-    }
 }
