@@ -13,10 +13,11 @@ Welcome to your new app.
 <input @bind="newToDo" />
 <button @onclick="AddTask">Add</button>
 <button @onclick="GetAllTasks">Get All </button>
+<input type="text" @bind="updatedToDo" />
 <ul>
     @foreach (ToDo t in todos)
     {
-        <li>@t.Text  <button @onclick="() => DeleteToDo(t)">DELETE >:(</button><input type="text" @bind="updatedToDo" /><button @onclick="() => UpdateToDo(t, updatedToDo)">Update</button></li>
+        <li>@t.Text  <button @onclick="() => DeleteToDo(t)">DELETE >:(</button><button @onclick="() => UpdateToDo(t, updatedToDo)">Update</button></li>
     }
 </ul>
 
