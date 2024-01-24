@@ -1,5 +1,7 @@
-﻿@inject ToDoRepository repo
-@page "/"
+﻿@page "/"
+@* @rendermode InteractiveServer *@
+
+@inject ToDoRepository repo
 @using ToDoMauiApp.Models
 
 <h1>Hello, world!</h1>
@@ -14,7 +16,7 @@ Welcome to your new app.
 <ul>
     @foreach (ToDo t in todos)
     {
-        <li>@t.Text  <button @onclick="() => DeleteToDo(t)">DELETE >:(</button></li>
+        <li>@t.Text  <button @onclick="() => DeleteToDo(t)">DELETE >:(</button><input type="text" @bind="updatedToDo" /><button @onclick="() => UpdateToDo(t, updatedToDo)">Update</button></li>
     }
 </ul>
 
@@ -22,6 +24,7 @@ Welcome to your new app.
     public List<ToDo> todos = new();
     public string statusMessage;
     public string newToDo;
+    public string updatedToDo;
 
     public async void AddTask()
     {
@@ -40,5 +43,9 @@ Welcome to your new app.
         todos = await repo.GetAllTodos();
     }
 
+    public async void UpdateToDo(ToDo t, string newtext)
+    {
+        await repo.UpdateTodo(t, updatedToDo);
+    }
 
 }

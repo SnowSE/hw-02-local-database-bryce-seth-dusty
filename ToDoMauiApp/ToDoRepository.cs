@@ -81,9 +81,10 @@ public class ToDoRepository
         await conn.DeleteAsync(todo);
     }
 
-    public async Task UpdateTodo(ToDo toDo)
+    public async Task UpdateTodo(ToDo toDo, string NewText)
     {
         await Init();
+        toDo.Text = NewText;
 
         await conn.UpdateAsync(toDo);
     }
