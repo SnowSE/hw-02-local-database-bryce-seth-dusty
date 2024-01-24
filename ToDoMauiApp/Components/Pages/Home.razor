@@ -14,7 +14,7 @@ Welcome to your new app.
 <ul>
     @foreach (ToDo t in todos)
     {
-        <li>@t.Text</li>
+        <li>@t.Text  <button @onclick="() => DeleteToDo(t)">DELETE >:(</button></li>
     }
 </ul>
 
@@ -33,4 +33,12 @@ Welcome to your new app.
     {
         todos = await repo.GetAllTodos();
     }
+
+    public async void DeleteToDo(ToDo t)
+    {
+        await repo.DeleteTodo(t);
+        todos = await repo.GetAllTodos();
+    }
+
+
 }

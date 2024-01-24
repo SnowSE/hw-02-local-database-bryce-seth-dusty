@@ -73,4 +73,18 @@ public class ToDoRepository
 
         return new List<ToDo>();
     }
+
+    public async Task DeleteTodo(ToDo todo)
+    { 
+        await Init(); 
+    
+        await conn.DeleteAsync(todo);
+    }
+
+    public async Task UpdateTodo(ToDo toDo)
+    {
+        await Init();
+
+        await conn.UpdateAsync(toDo);
+    }
 }
