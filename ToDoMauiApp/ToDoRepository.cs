@@ -10,7 +10,7 @@ namespace ToDoMauiApp;
 
 public class ToDoRepository
 {
-    string _dbPath;;
+    string _dbPath;
 
     public string StatusMessage { get; set; }
 
