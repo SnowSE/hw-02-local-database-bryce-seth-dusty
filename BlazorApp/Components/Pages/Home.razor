@@ -1,8 +1,56 @@
 ﻿@page "/"
+@using RazorClassLibrary.Data
+@inject HttpClient client;
 @rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
 <h1>Blazor Web App</h1>
 
-<RazorClassLibrary.Components.ToDoList></RazorClassLibrary.Components.ToDoList>
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<h3>Todo List</h3>
+
+<input @bind="newToDo" />
+<button @onclick="AddTask">Add</button>
+<button @onclick="GetAllTasks">Get All </button>
+<input type="text" @bind="updatedToDo" />
+<ul>
+    @foreach (ToDo t in todos)
+    {
+        <li>@t.Text  <button @onclick="() => DeleteToDo(t)">DELETE >:(</button><button @onclick="() => UpdateToDo(t, updatedToDo)">Update</button></li>
+    }
+</ul>
+
+@code {
+    public List<ToDo> todos = new();
+    public string statusMessage;
+    public string newToDo;
+    public string updatedToDo;
+
+
+    public async void AddTask()
+    {
+        ToDo todoObject = new ToDo() { Text = newToDo };
+        await client.PostAsJsonAsync<ToDo>($"https://localhost:7198/ToDo/{todoObject}", todoObject);
+        newToDo = string.Empty;
+    }
+
+    public async Task GetAllTasks()
+    {
+        todos = await client.GetFromJsonAsync<List<ToDo>>($"https://localhost:7198/ToDo/getall");
+    }
+
+    public async Task DeleteToDo(ToDo t)
+    {
+        await client.DeleteFromJsonAsync<ToDo>($"https://localhost:7198/ToDo/{t}");
+    }
+
+    public async Task UpdateToDo(ToDo t, string newtext)
+    {
+        await client.PatchAsJsonAsync($"https://localhost:7198/ToDo/{t}/{newtext}", t);
+    }
+
+}

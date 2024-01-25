@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using RazorClassLibrary.Data;
@@ -17,23 +18,24 @@ public class AppService : IService
         client = new HttpClient();
     }
 
-    public Task AddTodo(string todo)
+    public async Task AddTodo(string todo)
     {
-        throw new NotImplementedException();
+        ToDo todoObject = new ToDo() { Text = todo };   
+        await client.PostAsJsonAsync<ToDo>($"http://localhost:5223/{todo}", todoObject);
     }
 
-    public Task DeleteTodo(ToDo todo)
+    public async Task DeleteTodo(ToDo todo)
     {
-        throw new NotImplementedException();
+        await client.DeleteFromJsonAsync<ToDo>($"http://localhost:5223/{todo}");
     }
 
-    public Task<List<string>> GetAllTodos()
+    public async Task<List<ToDo>> GetAllTodos()
     {
-        throw new NotImplementedException();
+       return await client.GetFromJsonAsync<List<ToDo>>($"http://localhost:5223/getall");
     }
 
-    public Task UpdateTodo(ToDo t, string todo)
+    public async Task UpdateTodo(ToDo t, string todo)
     {
-        throw new NotImplementedException();
+        await client.PatchAsJsonAsync($"http://localhost:5223/{t}/{todo}", t);
     }
 }

@@ -6,12 +6,12 @@ using RazorClassLibrary.Data;
 
 namespace BlazorApp.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class ToDoController(IService service) : ControllerBase
 {
     // TODO calls methods in the BlazorServerApp service
-    [HttpPost("")]
+    [HttpPost("/{item}")]
     public async Task AddTodoItem(string item)
     {
         await service.AddTodo(item);
@@ -23,15 +23,15 @@ public class ToDoController(IService service) : ControllerBase
         await service.GetAllTodos();
     }
 
-    [HttpDelete("{id}")]
-    public async Task Delete(ToDo todo)
+    [HttpDelete("/{todo}")]
+    public async Task Delete([FromBody] ToDo todo)
     {
         await service.DeleteTodo(todo);
     }
 
-    [HttpPatch("{id}")]
-    public async Task Update(int id, string NewText)
+    [HttpPatch("{todo}/{NewText}")]
+    public async Task Update([FromBody] ToDo todo, string NewText)
     {
-
+        await service.UpdateTodo(todo, NewText);
     }
 }

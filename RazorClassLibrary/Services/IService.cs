@@ -14,5 +14,5 @@ public interface IService
 
     public Task UpdateTodo(ToDo t, string todo);
 
-    public Task<List<string>> GetAllTodos();
+    public Task<List<ToDo>> GetAllTodos();
 }
