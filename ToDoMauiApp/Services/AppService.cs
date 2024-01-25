@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RazorClassLibrary.Data;
 using RazorClassLibrary.Services;
 
 namespace ToDoMauiApp.Services;
@@ -15,9 +16,24 @@ public class AppService : IService
     {
         client = new HttpClient();
     }
-    public async Task Add(string todo)
+
+    public Task AddTodo(string todo)
     {
-        // CALL CONTROLLER YAY
-        await client.GetStringAsync(todo);
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteTodo(ToDo todo)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<string>> GetAllTodos()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateTodo(ToDo t, string todo)
+    {
+        throw new NotImplementedException();
     }
 }

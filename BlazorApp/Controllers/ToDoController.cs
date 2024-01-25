@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RazorClassLibrary.Services;
+using BlazorApp.Services;
+using RazorClassLibrary.Data;
 
 namespace BlazorApp.Controllers;
 
@@ -12,6 +14,24 @@ public class ToDoController(IService service) : ControllerBase
     [HttpPost("")]
     public async Task AddTodoItem(string item)
     {
-        await service.Add(item);
+        await service.AddTodo(item);
+    }
+
+    [HttpGet("/getall")]
+    public async Task GetAll()
+    {
+        await service.GetAllTodos();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task Delete(ToDo todo)
+    {
+        await service.DeleteTodo(todo);
+    }
+
+    [HttpPatch("{id}")]
+    public async Task Update(int id, string NewText)
+    {
+
     }
 }

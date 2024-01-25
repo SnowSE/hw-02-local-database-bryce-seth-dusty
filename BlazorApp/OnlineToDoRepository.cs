@@ -8,7 +8,7 @@ using SQLite;
 
 namespace ToDoMauiApp;
 
-public class ToDoRepository
+public class OnlineToDoRepository
 {
     string _dbPath;
 
@@ -19,7 +19,7 @@ public class ToDoRepository
 
     private async Task Init()
     {
-        // TODO: Add code to initialize the repository
+        // TODO: Add code to initialize the repositoryB
         if (conn is not null)
             return;
         
@@ -27,7 +27,7 @@ public class ToDoRepository
         await conn.CreateTableAsync<ToDo>();
     }
 
-    public ToDoRepository(string dbPath)
+    public OnlineToDoRepository(string dbPath)
     {
         _dbPath = dbPath;
     }
@@ -74,11 +74,11 @@ public class ToDoRepository
         return new List<ToDo>();
     }
 
-    public async Task DeleteTodo(ToDo todo)
+    public async Task DeleteTodo(int id)
     { 
         await Init(); 
     
-        await conn.DeleteAsync(todo);
+        await conn.DeleteAsync(id);
     }
 
     public async Task UpdateTodo(ToDo toDo, string NewText)
