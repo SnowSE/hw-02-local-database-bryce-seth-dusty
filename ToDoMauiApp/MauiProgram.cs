@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using RazorClassLibrary.Services;
+using ToDoMauiApp.Services;
 
 namespace ToDoMauiApp
 {
@@ -16,12 +18,16 @@ namespace ToDoMauiApp
 
             builder.Services.AddMauiBlazorWebView();
 
+            builder.Services.AddHttpClient();
+            builder.Services.AddScoped<IService, AppService>();
+            builder.Services.AddSingleton<ToDoRepository>();
+            //LocalDatabaseInitializer 
+
+
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
-            string dbPath = FileAccessHelper.GetLocalFilePath("todos.db3");
-            builder.Services.AddSingleton<ToDoRepository>(s => ActivatorUtilities.CreateInstance<ToDoRepository>(s, dbPath));
 
             return builder.Build();
         }

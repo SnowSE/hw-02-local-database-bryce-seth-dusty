@@ -1,14 +1,18 @@
 ﻿@page "/"
+@using System.Text.Json
+@using RazorClassLibrary.Services
 @* @rendermode InteractiveServer *@
 
 @inject ToDoRepository repo
+@inject HttpClient client
+@inject IService service
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
 
-<h3>Todo List</h3>
-
+@* <h3>Todo List : <span style="color: purple;">@accessType</span></h3>
+ *@
 <input @bind="newToDo" />
 <button @onclick="AddTask">Add</button>
 <button @onclick="GetAllTasks">Get All </button>
@@ -16,36 +20,44 @@ Welcome to your new app.
 <ul>
     @foreach (ToDo t in todos)
     {
-        <li>@t.Text  <button @onclick="() => DeleteToDo(t)">DELETE >:(</button><button @onclick="() => UpdateToDo(t, updatedToDo)">Update</button></li>
+        <li>[LOCAL] @t.Text  <button @onclick="() => DeleteToDo(t)">DELETE >:(</button><button @onclick="() => UpdateToDo(t, updatedToDo)">Update</button></li>
+    }
+    @if(onlineItems.Count > 0)
+    {
+        @foreach (var myItem in onlineItems)
+        {
+            <p>[ONLINE] id: @myItem.Id text: @myItem.Text</p>
+            <button @onclick="() => DeleteToDo(myItem)">DELETE >:(</button>
+            <button @onclick="() => UpdateToDo(myItem, updatedToDo)">Update</button>
+        }
     }
 </ul>
 
 @code {
     public List<ToDo> todos = new();
     public string statusMessage;
-    public string newToDo;
     public string updatedToDo;
+    public List<ToDo> onlineItems = new();
+    public string newToDo { get; set; } = "";
 
     public async void AddTask()
     {
-        await repo.AddNewToDo(newToDo);
-        newToDo = string.Empty;
+        await service.AddTodo(newToDo);
     }
 
     public async void GetAllTasks()
     {
-        todos = await repo.GetAllTodos();
+        onlineItems = await service.GetAllTodos();
     }
 
     public async void DeleteToDo(ToDo t)
     {
-        await repo.DeleteTodo(t);
-        todos = await repo.GetAllTodos();
+        await service.DeleteTodo(t);
     }
 
     public async void UpdateToDo(ToDo t, string newtext)
     {
-        await repo.UpdateTodo(t, updatedToDo);
+        await service.UpdateTodo(t, newtext);
     }
 
 }

@@ -1,25 +1,23 @@
-﻿
+﻿using RazorClassLibrary.Data;
 using RazorClassLibrary.Services;
-using SQLite;
-using ToDoMauiApp;
-using RazorClassLibrary.Data;
 
-namespace BlazorApp.Services;
+namespace WebAPI.Services;
 
-public class APIService: IService
+// This is the service that talks to the online database
+public class APIService : IService
 {
     public APIService()
     {
-        repo = new OnlineToDoRepository("database");
+        repo = new OnlineToDoRepository();
     }
 
     public OnlineToDoRepository repo { get; set; }
 
     public async Task AddTodo(string todo)
     {
-        await repo.AddNewToDo(todo);
+        await repo.AddTodo(todo);
     }
-    
+
     public async Task UpdateTodo(ToDo todo, string NewText)
     {
         await repo.UpdateTodo(todo, NewText);
@@ -32,12 +30,7 @@ public class APIService: IService
 
     public async Task DeleteTodo(ToDo todo)
     {
-        await repo.DeleteTodo(todo.Id);
-    }
-
-    Task<List<ToDo>> IService.GetAllTodos()
-    {
-        throw new NotImplementedException();
+        await repo.DeleteTodo(todo);
     }
 
 }

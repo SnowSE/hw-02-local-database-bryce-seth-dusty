@@ -9,7 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<IService, APIService>();
+builder.Services.AddScoped<IService, WebAppService>();
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 
 var app = builder.Build();

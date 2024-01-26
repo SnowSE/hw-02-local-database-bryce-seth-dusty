@@ -13,29 +13,86 @@ namespace ToDoMauiApp.Services;
 public class AppService : IService
 {
     private HttpClient client;
+    public ToDoRepository repo { get; set; }
+
     public AppService()
     {
         client = new HttpClient();
+        repo = new ToDoRepository();
     }
 
     public async Task AddTodo(string todo)
     {
-        ToDo todoObject = new ToDo() { Text = todo };   
-        await client.PostAsJsonAsync<ToDo>($"http://localhost:5223/{todo}", todoObject);
+        NetworkAccess accessType = Connectivity.Current.NetworkAccess;
+
+        if (accessType == NetworkAccess.Internet)
+        {
+            ToDo mweep = new();
+            await client.PostAsJsonAsync<ToDo>($"http://localhost:5289/{todo}", mweep);
+        }
+        else
+        {
+            await repo.AddTodo(todo);
+            todo = string.Empty;
+        }
     }
 
     public async Task DeleteTodo(ToDo todo)
     {
-        await client.DeleteFromJsonAsync<ToDo>($"http://localhost:5223/{todo}");
+        NetworkAccess accessType = Connectivity.Current.NetworkAccess;
+
+        if (accessType == NetworkAccess.Internet)
+        {
+            var response = await client.DeleteFromJsonAsync<ToDo>($"http://localhost:5289/delete/{todo}");
+        }
+        await repo.DeleteTodo(todo);
     }
 
     public async Task<List<ToDo>> GetAllTodos()
     {
-       return await client.GetFromJsonAsync<List<ToDo>>($"http://localhost:5223/getall");
+        NetworkAccess accessType = Connectivity.Current.NetworkAccess;
+        List<ToDo> onlineItems = new();
+        List<ToDo> todos = new();
+
+        if (accessType == NetworkAccess.Internet)
+        {
+            onlineItems = await client.GetFromJsonAsync<List<ToDo>>($"http://localhost:5289/getall");
+            List<ToDo> localItems = await repo.GetAllTodos();
+            foreach (var item in onlineItems)
+            {
+                if (!localItems.Contains(item))
+                {
+                    localItems.Add(item);
+                }
+            }
+            foreach (var item in localItems)
+            {
+                if (!onlineItems.Contains(item))
+                {
+                    onlineItems.Add(item);
+                }
+            }
+            return onlineItems;
+        }
+        else
+        {
+            todos = await repo.GetAllTodos();
+            return todos;
+        }
     }
 
     public async Task UpdateTodo(ToDo t, string todo)
     {
-        await client.PatchAsJsonAsync($"http://localhost:5223/{t}/{todo}", t);
+        NetworkAccess accessType = Connectivity.Current.NetworkAccess;
+
+        if (accessType == NetworkAccess.Internet)
+        {
+            await client.PatchAsJsonAsync<ToDo>($"http://localhost:5289/update/{t}/{todo}", t);
+            //TODO MAKE SYNC
+        }
+        else
+        {
+            await repo.UpdateTodo(t, todo);
+        }
     }
 }

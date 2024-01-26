@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RazorClassLibrary.Data;
-using SQLite;
-using Dotmim.Sync.SqlServer;
-using Dotmim.Sync.Sqlite;
-using Dotmim.Sync;
+﻿using RazorClassLibrary.Data;
 using RazorClassLibrary.Services;
+using SQLite;
 
-namespace ToDoMauiApp;
+namespace WebAPI;
 
-public class ToDoRepository : IService
+public class OnlineToDoRepository : IService
 {
     public string StatusMessage { get; set; }
 
@@ -26,10 +18,11 @@ public class ToDoRepository : IService
         // TODO: Add code to initialize the repository
         if (conn is not null)
             return;
-        
+
         conn = new SQLiteAsyncConnection(_dbPath);
         await conn.CreateTableAsync<ToDo>();
     }
+
 
     public async Task AddTodo(string text)
     {
@@ -45,7 +38,7 @@ public class ToDoRepository : IService
                 throw new Exception("Valid text required");
 
             // TODO: Insert the new person into the database
-            result = await conn.InsertAsync( new ToDo { Text = text } );
+            result = await conn.InsertAsync(new ToDo { Text = text });
 
             StatusMessage = string.Format("{0} record(s) added (Name: {1})", result, text);
         }
@@ -61,9 +54,9 @@ public class ToDoRepository : IService
         // TODO: Init then retrieve a list of Person objects from the database into a list
         try
         {
-            await Init(); 
+            await Init();
 
-            return await conn.Table<ToDo>().ToListAsync(); 
+            return await conn.Table<ToDo>().ToListAsync();
         }
         catch (Exception ex)
         {
@@ -74,9 +67,9 @@ public class ToDoRepository : IService
     }
 
     public async Task DeleteTodo(ToDo todo)
-    { 
-        await Init(); 
-    
+    {
+        await Init();
+
         await conn.DeleteAsync(todo);
     }
 
@@ -86,29 +79,6 @@ public class ToDoRepository : IService
         toDo.Text = NewText;
 
         await conn.UpdateAsync(toDo);
-    }
-
-    public async Task Sync()
-    {
-        // Sql Server provider, the "server" or "hub".
-        SqlSyncProvider serverProvider = new SqlSyncProvider(
-            @"Data Source=onlinetodorepsitory.db;Initial Catalog=AdventureWorks;Integrated Security=true;");
-
-        // Sqlite Client provider acting as the "client"
-        SqliteSyncProvider clientProvider = new SqliteSyncProvider("todorepository.db");
-
-        // Tables involved in the sync process:
-        var setup = new SyncSetup("todos");
-
-        // Sync agent
-        SyncAgent agent = new SyncAgent(clientProvider, serverProvider);
-
-        do
-        {
-            var result = await agent.SynchronizeAsync(setup);
-            Console.WriteLine(result);
-
-        } while (Console.ReadKey().Key != ConsoleKey.Escape);
     }
 
 }
