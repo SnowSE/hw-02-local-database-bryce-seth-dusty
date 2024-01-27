@@ -153,7 +153,7 @@ public class UnitTest1 : IClassFixture<MyWebAppFactory>
         var allOnlineTodos = await _sut.GetAllTodos(true);
         var allLocalTodos = await _sut.GetAllTodos(false);
         int numOnlineTodos = allOnlineTodos.Count;
-        int numLocalTodos = allLocalTodos.Count;
+        int numLocalTodos = allLocalTodos.Count;  
 
         // Assert
         Assert.NotEqual(numOnlineTodos, numLocalTodos);
