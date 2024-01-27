@@ -10,9 +10,11 @@ public interface IService
 {
     public Task AddTodo(string todo);
 
-    public Task DeleteTodo(ToDo todo);
+    public Task DeleteTodo(int todo);
 
     public Task UpdateTodo(ToDo t, string todo);
 
     public Task<List<ToDo>> GetAllTodos();
+
+    public Task SyncDbs();
 }

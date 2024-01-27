@@ -31,10 +31,13 @@ public class ToDoController : ControllerBase
         return await service.GetAllTodos();
     }
 
-    [HttpDelete("/delete/{todo}")]
-    public async Task Delete(ToDo todo)
+    [HttpDelete("/delete/{todoId}")]
+    public async Task Delete(int todoId)
     {
-        await service.DeleteTodo(todo);
+        // Convert todoId to the appropriate type if necessary
+        // Example: int todoId = int.Parse(todoId);
+
+        await service.DeleteTodo(todoId);
     }
 
     [HttpPatch("/update/{todo}/{NewText}")]

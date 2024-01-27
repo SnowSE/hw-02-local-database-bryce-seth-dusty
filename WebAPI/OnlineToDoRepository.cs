@@ -6,12 +6,14 @@ namespace WebAPI;
 
 public class OnlineToDoRepository : IService
 {
+
+    public HttpClient client { get; set; }
     public string StatusMessage { get; set; }
 
     // TODO: Add variable for the SQLite connection
     private SQLiteAsyncConnection conn;
 
-    private string _dbPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "todos.db3");
+    private string _dbPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Onlinetodos.db3");
 
     private async Task Init()
     {
@@ -66,11 +68,16 @@ public class OnlineToDoRepository : IService
         return new List<ToDo>();
     }
 
-    public async Task DeleteTodo(ToDo todo)
+    public async Task DeleteTodo(int todoId)
     {
         await Init();
 
-        await conn.DeleteAsync(todo);
+        foreach(ToDo todo in await GetAllTodos())
+        {
+            if (todo.Id == todoId)
+                await conn.DeleteAsync(todo);
+        }
+
     }
 
     public async Task UpdateTodo(ToDo toDo, string NewText)
@@ -81,4 +88,21 @@ public class OnlineToDoRepository : IService
         await conn.UpdateAsync(toDo);
     }
 
+    public async Task SyncDbs()
+    {
+        client = new HttpClient();
+        List<ToDo> localToDos = await GetAllTodos();
+
+        // call api for all onlines
+        List<ToDo> onlineToDos = await client.GetFromJsonAsync<List<ToDo>>($"http://localhost:5223/getall");
+
+
+        foreach (ToDo toDo in onlineToDos)
+        {
+            if (!localToDos.Contains(toDo))
+            {
+                await AddTodo(toDo.Text);
+            }
+        }
+    }
 }

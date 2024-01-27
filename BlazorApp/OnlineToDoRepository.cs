@@ -14,6 +14,9 @@ public class OnlineToDoRepository
 
     public string StatusMessage { get; set; }
 
+    private HttpClient client;
+
+
     // TODO: Add variable for the SQLite connection
     private SQLiteAsyncConnection conn;
 
@@ -87,5 +90,30 @@ public class OnlineToDoRepository
         toDo.Text = NewText;
 
         await conn.UpdateAsync(toDo);
+    }
+
+    public async Task SyncOnlineWithLocal()
+    {
+        client = new HttpClient();
+        List<ToDo> localToDos = await GetAllTodos();
+
+        // call api for online
+        List<ToDo> onlineToDos = await client.GetFromJsonAsync<List<ToDo>>($"http://localhost:5223/getall");
+
+
+        foreach(ToDo toDo in onlineToDos)
+        {
+            if (!localToDos.Contains(toDo))
+            {
+                localToDos.Add(toDo);  
+            }
+        }
+
+        
+    }
+
+    public async Task SyncLocalWithOnline()
+    {
+
     }
 }

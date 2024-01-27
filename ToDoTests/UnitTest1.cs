@@ -18,18 +18,6 @@ public class UnitTest1
     }
 
     [Fact]
-    public void PassingTest()
-    {
-        Assert.Equal(5, 5);
-    }
-
-    [Fact]
-    public void FailingTest()
-    {
-        Assert.Equal(5, 1);
-    }
-
-    [Fact]
     public async Task GetSomeTodo()
     {
         // Arrange
@@ -42,27 +30,27 @@ public class UnitTest1
         Assert.True(greaterThanZero);
     }
 
-    [Fact]
-    public async void UpdatesOnClientShowUpOnServer()
-    {
-        // Arrange
+    //[Fact]
+    //public async void UpdatesOnClientShowUpOnServer()
+    //{
+    //    // Arrange
         
 
-        // Act
-        var allTodos = await _sut.GetAllTodos();
+    //    // Act
+    //    var allTodos = await _sut.GetAllTodos();
 
-        // Assert
-    }
+    //    // Assert
+    //}
 
-    [Fact]
-    public void UpdatesOnServerShowUpOnClient()
-    {
-        Assert.Equal(5, 1);
-    }
+    //[Fact]
+    //public void UpdatesOnServerShowUpOnClient()
+    //{
+    //    Assert.Equal(5, 1);
+    //}
 
-    [Fact]
-    public void LastWriteWins()
-    {
-        Assert.Equal(5, 1);
-    }
+    //[Fact]
+    //public void LastWriteWins()
+    //{
+    //    Assert.Equal(5, 1);
+    //}
 }

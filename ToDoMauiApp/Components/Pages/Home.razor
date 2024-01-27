@@ -13,24 +13,20 @@ Welcome to your new app.
 
 @* <h3>Todo List : <span style="color: purple;">@accessType</span></h3>
  *@
+ <button class="btn-primary" @onclick="Sync">SYNC</button>
 <input @bind="newToDo" />
 <button @onclick="AddTask">Add</button>
 <button @onclick="GetAllTasks">Get All </button>
 <input type="text" @bind="updatedToDo" />
 <ul>
-    @foreach (ToDo t in todos)
-    {
-        <li>[LOCAL] @t.Text  <button @onclick="() => DeleteToDo(t)">DELETE >:(</button><button @onclick="() => UpdateToDo(t, updatedToDo)">Update</button></li>
-    }
-    @if(onlineItems.Count > 0)
-    {
+   
         @foreach (var myItem in onlineItems)
         {
-            <p>[ONLINE] id: @myItem.Id text: @myItem.Text</p>
+            <p>id: @myItem.Id text: @myItem.Text</p>
             <button @onclick="() => DeleteToDo(myItem)">DELETE >:(</button>
             <button @onclick="() => UpdateToDo(myItem, updatedToDo)">Update</button>
         }
-    }
+   
 </ul>
 
 @code {
@@ -52,12 +48,18 @@ Welcome to your new app.
 
     public async void DeleteToDo(ToDo t)
     {
-        await service.DeleteTodo(t);
+        await service.DeleteTodo(t.Id);
     }
 
     public async void UpdateToDo(ToDo t, string newtext)
     {
         await service.UpdateTodo(t, newtext);
+    }
+
+    public async void Sync()
+    {
+        onlineItems.Clear();
+        await service.SyncDbs();
     }
 
 }

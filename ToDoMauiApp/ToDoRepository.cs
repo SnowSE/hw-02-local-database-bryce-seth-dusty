@@ -19,7 +19,7 @@ public class ToDoRepository : IService
     // TODO: Add variable for the SQLite connection
     private SQLiteAsyncConnection conn;
 
-    private string _dbPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "todos.db3");
+    private string _dbPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Localtodos.db3");
 
     private async Task Init()
     {
@@ -73,11 +73,15 @@ public class ToDoRepository : IService
         return new List<ToDo>();
     }
 
-    public async Task DeleteTodo(ToDo todo)
-    { 
-        await Init(); 
-    
-        await conn.DeleteAsync(todo);
+    public async Task DeleteTodo(int todoId)
+    {
+        await Init();
+
+        foreach (ToDo todo in await GetAllTodos())
+        {
+            if (todo.Id == todoId)
+                await conn.DeleteAsync(todo);
+        }
     }
 
     public async Task UpdateTodo(ToDo toDo, string NewText)
@@ -88,27 +92,9 @@ public class ToDoRepository : IService
         await conn.UpdateAsync(toDo);
     }
 
-    public async Task Sync()
+    public async Task SyncDbs()
     {
-        // Sql Server provider, the "server" or "hub".
-        SqlSyncProvider serverProvider = new SqlSyncProvider(
-            @"Data Source=onlinetodorepsitory.db;Initial Catalog=AdventureWorks;Integrated Security=true;");
-
-        // Sqlite Client provider acting as the "client"
-        SqliteSyncProvider clientProvider = new SqliteSyncProvider("todorepository.db");
-
-        // Tables involved in the sync process:
-        var setup = new SyncSetup("todos");
-
-        // Sync agent
-        SyncAgent agent = new SyncAgent(clientProvider, serverProvider);
-
-        do
-        {
-            var result = await agent.SynchronizeAsync(setup);
-            Console.WriteLine(result);
-
-        } while (Console.ReadKey().Key != ConsoleKey.Escape);
+       
     }
 
 }

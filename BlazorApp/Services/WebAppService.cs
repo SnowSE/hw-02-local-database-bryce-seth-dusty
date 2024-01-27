@@ -20,7 +20,7 @@ public class WebAppService : IService
         await client.PostAsJsonAsync<ToDo>($"http://localhost:5223/{todo}", todoObject);
     }
 
-    public async Task DeleteTodo(ToDo todo)
+    public async Task DeleteTodo(int todo)
     {
         await client.DeleteFromJsonAsync<ToDo>($"http://localhost:5223/{todo}");
     }
@@ -28,6 +28,11 @@ public class WebAppService : IService
     public async Task<List<ToDo>> GetAllTodos()
     {
         return await client.GetFromJsonAsync<List<ToDo>>($"http://localhost:5223/getall");
+    }
+
+    public Task SyncDbs()
+    {
+        throw new NotImplementedException();
     }
 
     public async Task UpdateTodo(ToDo t, string todo)
