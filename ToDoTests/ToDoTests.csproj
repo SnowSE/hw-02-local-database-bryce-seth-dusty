@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Dotmim.Sync.Sqlite" Version="0.9.8" />
     <PackageReference Include="Dotmim.Sync.SqlServer" Version="0.9.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="Shiny.Xunit.Runners.Maui" Version="1.0.0" />

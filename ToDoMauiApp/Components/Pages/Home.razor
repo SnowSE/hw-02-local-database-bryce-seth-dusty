@@ -35,25 +35,34 @@ Welcome to your new app.
     public string updatedToDo;
     public List<ToDo> onlineItems = new();
     public string newToDo { get; set; } = "";
+    public bool internet { get; set; } = false;
 
     public async void AddTask()
     {
-        await service.AddTodo(newToDo);
+        NetworkAccess accessType = Connectivity.Current.NetworkAccess;
+        if(accessType == NetworkAccess.Internet) { internet = true; }
+        await service.AddTodo(newToDo, internet);
     }
 
     public async void GetAllTasks()
     {
-        onlineItems = await service.GetAllTodos();
+        NetworkAccess accessType = Connectivity.Current.NetworkAccess;
+        if (accessType == NetworkAccess.Internet) { internet = true; }
+        onlineItems = await service.GetAllTodos(internet);
     }
 
     public async void DeleteToDo(ToDo t)
     {
-        await service.DeleteTodo(t.Id);
+        NetworkAccess accessType = Connectivity.Current.NetworkAccess;
+        if (accessType == NetworkAccess.Internet) { internet = true; }
+        await service.DeleteTodo(t.Id, internet);
     }
 
     public async void UpdateToDo(ToDo t, string newtext)
     {
-        await service.UpdateTodo(t, newtext);
+        NetworkAccess accessType = Connectivity.Current.NetworkAccess;
+        if (accessType == NetworkAccess.Internet) { internet = true; }
+        await service.UpdateTodo(t, newtext, internet);
     }
 
     public async void Sync()

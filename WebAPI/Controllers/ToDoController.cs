@@ -22,13 +22,13 @@ public class ToDoController : ControllerBase
     public async Task AddTodoItem(string item)
     {
         logger.LogInformation("Adding an item with the following text: " + item);
-        await service.AddTodo(item);
+        await service.AddTodo(item, true);
     }
 
     [HttpGet("/getall")]
     public async Task<List<ToDo>> GetAll()
     {
-        return await service.GetAllTodos();
+        return await service.GetAllTodos(true);
     }
 
     [HttpDelete("/delete/{todoId}")]
@@ -37,12 +37,12 @@ public class ToDoController : ControllerBase
         // Convert todoId to the appropriate type if necessary
         // Example: int todoId = int.Parse(todoId);
 
-        await service.DeleteTodo(todoId);
+        await service.DeleteTodo(todoId, true);
     }
 
     [HttpPatch("/update/{todo}/{NewText}")]
     public async Task Update([FromBody] ToDo todo, string NewText)
     {
-        await service.UpdateTodo(todo, NewText);
+        await service.UpdateTodo(todo, NewText, true);
     }
 }

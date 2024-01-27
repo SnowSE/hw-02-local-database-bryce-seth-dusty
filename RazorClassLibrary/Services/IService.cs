@@ -8,13 +8,13 @@ using RazorClassLibrary.Data;
 
 public interface IService
 {
-    public Task AddTodo(string todo);
+    public Task AddTodo(string todo, bool access);
 
-    public Task DeleteTodo(int todo);
+    public Task DeleteTodo(int todo, bool access);
 
-    public Task UpdateTodo(ToDo t, string todo);
+    public Task UpdateTodo(ToDo t, string todo, bool access);
 
-    public Task<List<ToDo>> GetAllTodos();
+    public Task<List<ToDo>> GetAllTodos(bool access);
 
     public Task SyncDbs();
 }

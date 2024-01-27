@@ -31,7 +31,7 @@ public class ToDoRepository : IService
         await conn.CreateTableAsync<ToDo>();
     }
 
-    public async Task AddTodo(string text)
+    public async Task AddTodo(string text, bool hey)
     {
         ArgumentNullException.ThrowIfNull(text, nameof(text));
         int result = 0;
@@ -56,7 +56,7 @@ public class ToDoRepository : IService
 
     }
 
-    public async Task<List<ToDo>> GetAllTodos()
+    public async Task<List<ToDo>> GetAllTodos(bool hey)
     {
         // TODO: Init then retrieve a list of Person objects from the database into a list
         try
@@ -73,18 +73,18 @@ public class ToDoRepository : IService
         return new List<ToDo>();
     }
 
-    public async Task DeleteTodo(int todoId)
+    public async Task DeleteTodo(int todoId, bool hey)
     {
         await Init();
 
-        foreach (ToDo todo in await GetAllTodos())
+        foreach (ToDo todo in await GetAllTodos(false))
         {
             if (todo.Id == todoId)
                 await conn.DeleteAsync(todo);
         }
     }
 
-    public async Task UpdateTodo(ToDo toDo, string NewText)
+    public async Task UpdateTodo(ToDo toDo, string NewText, bool hey)
     {
         await Init();
         toDo.Text = NewText;

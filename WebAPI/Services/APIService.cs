@@ -14,24 +14,24 @@ public class APIService : IService
 
     public OnlineToDoRepository repo { get; set; }
 
-    public async Task AddTodo(string todo)
+    public async Task AddTodo(string todo, bool isOnline)
     {
-        await repo.AddTodo(todo);
+        await repo.AddTodo(todo, isOnline);
     }
 
-    public async Task UpdateTodo(ToDo todo, string NewText)
+    public async Task UpdateTodo(ToDo todo, string NewText, bool isOnline)
     {
-        await repo.UpdateTodo(todo, NewText);
+        await repo.UpdateTodo(todo, NewText, isOnline);
     }
 
-    public async Task<List<ToDo>> GetAllTodos()
+    public async Task<List<ToDo>> GetAllTodos(bool isOnline)
     {
-        return await repo.GetAllTodos();
+        return await repo.GetAllTodos(isOnline);
     }
 
-    public async Task DeleteTodo(int todoId)
+    public async Task DeleteTodo(int todoId, bool isOnline)
     {
-        await repo.DeleteTodo(todoId);
+        await repo.DeleteTodo(todoId, isOnline);
     }
 
     //sync from online to local

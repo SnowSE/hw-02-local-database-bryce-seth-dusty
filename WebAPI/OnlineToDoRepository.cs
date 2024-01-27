@@ -10,7 +10,6 @@ public class OnlineToDoRepository : IService
     public HttpClient client { get; set; }
     public string StatusMessage { get; set; }
 
-    // TODO: Add variable for the SQLite connection
     private SQLiteAsyncConnection conn;
 
     private string _dbPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Onlinetodos.db3");
@@ -26,7 +25,7 @@ public class OnlineToDoRepository : IService
     }
 
 
-    public async Task AddTodo(string text)
+    public async Task AddTodo(string text, bool useless)
     {
         ArgumentNullException.ThrowIfNull(text, nameof(text));
         int result = 0;
@@ -51,7 +50,7 @@ public class OnlineToDoRepository : IService
 
     }
 
-    public async Task<List<ToDo>> GetAllTodos()
+    public async Task<List<ToDo>> GetAllTodos(bool useless)
     {
         // TODO: Init then retrieve a list of Person objects from the database into a list
         try
@@ -68,11 +67,11 @@ public class OnlineToDoRepository : IService
         return new List<ToDo>();
     }
 
-    public async Task DeleteTodo(int todoId)
+    public async Task DeleteTodo(int todoId, bool useless)
     {
         await Init();
 
-        foreach(ToDo todo in await GetAllTodos())
+        foreach(ToDo todo in await GetAllTodos(true))
         {
             if (todo.Id == todoId)
                 await conn.DeleteAsync(todo);
@@ -80,7 +79,7 @@ public class OnlineToDoRepository : IService
 
     }
 
-    public async Task UpdateTodo(ToDo toDo, string NewText)
+    public async Task UpdateTodo(ToDo toDo, string NewText, bool useless)
     {
         await Init();
         toDo.Text = NewText;
@@ -90,19 +89,6 @@ public class OnlineToDoRepository : IService
 
     public async Task SyncDbs()
     {
-        client = new HttpClient();
-        List<ToDo> localToDos = await GetAllTodos();
 
-        // call api for all onlines
-        List<ToDo> onlineToDos = await client.GetFromJsonAsync<List<ToDo>>($"http://localhost:5223/getall");
-
-
-        foreach (ToDo toDo in onlineToDos)
-        {
-            if (!localToDos.Contains(toDo))
-            {
-                await AddTodo(toDo.Text);
-            }
-        }
     }
 }
